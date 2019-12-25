@@ -1,4 +1,6 @@
-*.zip 
 /submission-example 
-/images
+
+*.jpg
+*.xml
+*.zip
 *.csv
