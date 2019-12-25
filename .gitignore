@@ -1,3 +1,4 @@
 *.zip 
 /submission-example 
 /images
+*.csv
