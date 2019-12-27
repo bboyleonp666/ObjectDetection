@@ -1,51 +1,51 @@
 item {
     id: 0
-    name: 'bucket'
-}
-
-item {
-    id: 1
-    name: 'tub'
-}
-
-item {
-    id: 2
     name: 'toilet'
 }
 
 item {
-    id: 3
+    id: 1
     name: 'washing_machine'
 }
 
 item {
+    id: 2
+    name: 'tub'
+}
+
+item {
+    id: 3
+    name: 'tire'
+}
+
+item {
     id: 4
-    name: 'plastic_bag'
-}
-
-item {
-    id: 5
-    name: 'plate'
-}
-
-item {
-    id: 6
-    name: 'water_tower'
-}
-
-item {
-    id: 7
-    name: 'box'
-}
-
-item {
-    id: 8
     name: 'bowl'
 }
 
 item {
-    id: 9
+    id: 5
     name: 'bottle'
+}
+
+item {
+    id: 6
+    name: 'plate'
+}
+
+item {
+    id: 7
+    name: 'aquarium'
+}
+
+item {
+    id: 8
+    name: 'plastic_bag'
+}
+
+item {
+    id: 9
+    name: 'water_tower'
 }
 
 item {
@@ -55,11 +55,11 @@ item {
 
 item {
     id: 11
-    name: 'aquarium'
+    name: 'bucket'
 }
 
 item {
     id: 12
-    name: 'tire'
+    name: 'box'
 }
 
