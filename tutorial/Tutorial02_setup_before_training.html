@@ -13131,6 +13131,8 @@ protoc --python_out=. .\object_detection\protos\anchor_generator.proto .\object_
 </font></td></tr></table>
 </font></pre>
 <pre><font size=4>
+<font size=3><b>Note:</b> Sometimes your protobuf module might not work properly, reinstall it again by <span style='background:#E8E8E8'>conda install -c anaconda protobuf</span>
+</font>
 And build this API by typing
 
     <font size=3><span style='background:#E8E8E8'>python setup.py build</span></font>
@@ -13160,7 +13162,7 @@ And then copy the following .config file from
 
 and put it into
 
-    <i><b>&#60;tensorflow&#62;\models\research\object_detection</b></i>
+    <i><b>&#60;tensorflow&#62;\models\research\object_detection\training</b></i>
 <font size=3>
 <b>Note:</b> Here we are going to use <b>faster_rcnn_inception_v2_coco_2018_01_28</b> model
       so we download the model zipped in .tar.gz file and extract it to <i><b>\object_detection</b></i>
