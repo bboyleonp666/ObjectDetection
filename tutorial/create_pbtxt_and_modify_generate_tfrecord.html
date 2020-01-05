@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>Tutorial01_download_and_installation</title>
+<title>create_pbtxt_and_modify_generate_tfrecord</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13076,24 +13076,15 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">Date: 2019/12/29</span>
-<span class="sd">OS: Windows 10</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="sd">This tutorial is based on Anaconda and Tensorflow-gpu v1.13.1.</span>
-<span class="sd">I will introduce how to setup the Tensorflow Object Detection API.</span>
-
-<span class="sd">I strongly recommend everyone who read this tutorial use Tensorflow-gpu v1.13.1 for object detection API.</span>
-<span class="sd">Since I have faced many problems using Tensorflow-gpu v2.0.0, v1.9, v1.14.</span>
-
-<span class="sd">I guess it&#39;s due to Tensorflow Object Detection team is still working hard on improving this API,</span>
-<span class="sd">so they modified a lot and also the other module like numpy or pandas are progressing,</span>
-<span class="sd">which will lead to difficuty while play around this API</span>
-
-<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">mkstemp</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">move</span>
+<span class="kn">import</span> <span class="nn">re</span>
 </pre></div>
 
     </div>
@@ -13101,158 +13092,145 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Download-Anaconda">Download Anaconda<a class="anchor-link" href="#Download-Anaconda">&#182;</a></h1><pre><font size=4>
-For downloading Anaconda:
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">create_label_map</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">obj_path</span><span class="p">):</span>
+    <span class="n">csv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">obj_dir</span><span class="p">,</span> <span class="s2">&quot;training</span><span class="se">\\</span><span class="s2">labelmap.pbtxt&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">labelmap</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">csv</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">])):</span>
+            <span class="n">line1</span> <span class="o">=</span> <span class="s2">&quot;item {</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">line2</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;    id: {str(i+1)}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">line3</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;    name: &#39;</span><span class="si">{label}</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">line4</span> <span class="o">=</span> <span class="s2">&quot;}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">line1</span> <span class="o">+</span> <span class="n">line2</span> <span class="o">+</span> <span class="n">line3</span> <span class="o">+</span> <span class="n">line4</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="n">labelmap</span><span class="p">)</span>
+</pre></div>
 
-    <a href="https://www.anaconda.com/">&#9658; Anaconda Home Page</a>
-<font size=3>
-<b>Note:</b> The GUI version will be easier to install unless you are familiar to command line one
-      Python v3.x are recommended if you are not a Python v2.x user for long
-</font>
-</font></pre>
+    </div>
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Download-and-install-CUDA-and-cuDNN">Download and install CUDA and cuDNN<a class="anchor-link" href="#Download-and-install-CUDA-and-cuDNN">&#182;</a></h1><pre><font size=4>
-<font color="gray"><i>If you want to use CPU ver of Tensorflow, you may skill this part</i></font>
-<font color="gray"><i>However GPU ver is recommended due to object detection takes lots of time</i></font>
-
-Check if your GPU support CUDA <a href="https://developer.nvidia.com/cuda-gpus">here</a>
-For downloading CUDA and cuDNN, which are for Tensorflow GPU ver:
-
-    <a href = "https://developer.nvidia.com/cuda-toolkit-archive">&#9658; CUDA Legacy Releases</a>
-    <a href = "https://developer.nvidia.com/cudnn">&#9658; cuDNN Home Page</a>
-<font size=3>
-<b>Note:</b> Tensorflow-gpu v1.13.1 needs CUDA v10.0 and following cuDNN v7.6.5
-      For other CUDA ver., check <a href="https://www.tensorflow.org/install/source_windows">here</a>
-      You have to sign up and answer some simple questions for downloading cuDNN
-</font>
-If you successfully install CUDA, then open the cuDNN zip file, extract the files and paste each to them into the directories along with the directories inside zip file.
-
-
-Now check if the CUDA installation setup the enviroment variables for you
-<font color="gray"><i>
-    Right click <b>Computer(本機)</b> on desktop
-      -> <b>Properties(內容)</b>
-      -> <b>Advanced system setting(進階系統設定)</b>
-      -> <b>Advanced(進階)</b>
-      -> <b>environment variable(環境變數)</b>
-</i></font>
-Under system variable, check if 
-<font color="gray"><i>
-<b>    variable        value</b>
-    ---------       ------
-    CUDA_PATH       C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0
-    CUDA_BIN_PATH   C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\bin
-</i></font>
-exist, if not add them manually.
-</font></pre>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Set-up-virtual-enviroment">Set up virtual enviroment<a class="anchor-link" href="#Set-up-virtual-enviroment">&#182;</a></h1><pre><font size=4>
-Open Anaconda Prompt and create a new virtual enviroment by input
-<font size=3>
-    <span style='background:#E8E8E8'>conda create -n <b>&#60;name&#62;</b> python=3.6 pip -y</span>
-    <span style='background:#E8E8E8'>conda activate <b>&#60;name&#62;</b></span>
-    <span style='background:#E8E8E8'>pip install --ignore-installed --upgrade tensorflow-gpu==1.13.1</span>
-</font>
-<font size=3><b>Note:</b> <b>&#60;name&#62;</b> is the virtual enviroment name which you can decide yourself</font>
-
-
-Install neccessary modules
-<font size=3>
-    <span style='background:#E8E8E8'>pip install cython</span>
-    <span style='background:#E8E8E8'>pip install contextlib2</span>
-    <span style='background:#E8E8E8'>pip install pillow</span>
-    <span style='background:#E8E8E8'>pip install lxml</span>
-    <span style='background:#E8E8E8'>pip install matplotlib</span>
-    <span style='background:#E8E8E8'>pip install opencv-python</span>
-    <span style='background:#E8E8E8'>pip install jupyter</span>
-    <span style='background:#E8E8E8'>pip install pandas</span>
-</font>
-</font></pre><pre>
-<b>Note:</b> List the version in case modules in other versions fail
-</pre><table>
-<thead><tr>
-<th style="text-align:left"><font size=4>Module</th>
-<th style="text-align:left"><font size=4>Version</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><font size=4>cython</font></td>
-<td style="text-align:left"><font size=4><i>0.29.14</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>contextlib2</font></td>
-<td style="text-align:left"><font size=4><i>0.6.0.post1</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>pillow</font></td>
-<td style="text-align:left"><font size=4><i>6.2.1</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>lxml</font></td>
-<td style="text-align:left"><font size=4><i>4.4.2</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>matplotlib</font></td>
-<td style="text-align:left"><font size=4><i>3.1.2</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>opencv-python</font></td>
-<td style="text-align:left"><font size=4><i>4.1.2.30</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>jupyter</font></td>
-<td style="text-align:left"><font size=4><i>1.0.0</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>pandas</font></td>
-<td style="text-align:left"><font size=4><i>0.25.3</i></font></td>
-</tr>
-</tbody>
-</table>
 
 </div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Clone-the-object-detection-API-repository-and-set-it-up">Clone the object detection API repository and set it up<a class="anchor-link" href="#Clone-the-object-detection-API-repository-and-set-it-up">&#182;</a></h1><pre><font size=4>
-Create a folder for object detection API --  <b><i>..\..\Tensorflow</i></b>
-For example:  <font color="gray"><i>C:\Users\user\Tensorflow</i></font>
-Head to the directory and clone the repository from the offical github page by git or download the zip
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">replace_generate_tfrecord</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">):</span>
+    <span class="n">csv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">)</span>
+    <span class="c1"># Create new lines for replacement</span>
+    <span class="n">new_lines</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;New lines:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">csv</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">])):</span>
+        <span class="n">line1</span> <span class="o">=</span> <span class="s2">&quot;    if row_label == &#39;</span><span class="si">{}</span><span class="s2">&#39;:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+        <span class="n">line2</span> <span class="o">=</span> <span class="s2">&quot;        return </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">line1</span> <span class="o">+</span> <span class="n">line2</span><span class="p">)</span>
+        <span class="n">new_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line1</span> <span class="o">+</span> <span class="n">line2</span><span class="p">)</span>
 
-    <a href="https://github.com/tensorflow/models.git">&#9658; models</a>
-<font size=3>
-<b>Note:</b> If you download the zip file, it will be named <b>\models-master</b>
-      To avoid problems that may happen in the future, change the name to <b>\models</b>
-</font>
+    <span class="c1"># read old file that we are going to modify and save it in lines</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">old_file</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">old_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="c1"># After copy the content, remove it</span>
 
-Download the patch from <a href="https://github.com/bboyleonp666/ObjectDetection">my github</a>, which is named after <b>patch.rar</b>
-Copy all the files inside and paste them into
+    <span class="c1"># write new .py file with the same name</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_file</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">start_replace</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># set judgement for print new_lines or not</span>
+        <span class="n">end_loop</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">end_loop</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;if row_label ==&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">new_file</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+                <span class="k">if</span> <span class="n">start_replace</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">new_line</span> <span class="ow">in</span> <span class="n">new_lines</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">new_line</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">new_file</span><span class="p">)</span>
+                    <span class="n">start_replace</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
 
-    <b><i>..\..\Tensorflow\models\research\object_detection</i></b>
-<font size=3>
-<b>Note:</b> The files inside patch.rar contains some important .py files that we are going to use
-      I have put the source of this patch in <b>source.txt</b>
-      You can also go to the <a href="https://github.com/EdjeElectronics/TensorFlow-Object-Detection-API-Tutorial-Train-Multiple-Objects-Windows-10">source page</a> but you have to delete some files according to that tutorial
-</font>
-</font></pre>
+    </div>
 </div>
 </div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># run create_label_map function</span>
+<span class="n">obj_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+<span class="n">train_csv_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">&quot;train_labels.csv&quot;</span><span class="p">)</span>
+<span class="n">create_label_map</span><span class="p">(</span><span class="n">train_csv_path</span><span class="p">,</span> <span class="n">obj_dir</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># run replace_generate_tfrecord</span>
+<span class="n">generate_tfrecord_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">obj_dir</span><span class="p">,</span> <span class="s2">&quot;generate_tfrecord.py&quot;</span><span class="p">)</span> <span class="c1"># file path of generate_tfrecord.py</span>
+<span class="n">replace_generate_tfrecord</span><span class="p">(</span><span class="n">generate_tfrecord_path</span><span class="p">,</span> <span class="n">train_csv_path</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>New lines:
+    if row_label == &#39;aquarium&#39;:
+        return 1
+    if row_label == &#39;toilet&#39;:
+        return 2
+    if row_label == &#39;tub&#39;:
+        return 3
+    if row_label == &#39;bowl&#39;:
+        return 4
+    if row_label == &#39;bucket&#39;:
+        return 5
+    if row_label == &#39;plastic_bag&#39;:
+        return 6
+    if row_label == &#39;water_tower&#39;:
+        return 7
+    if row_label == &#39;plate&#39;:
+        return 8
+    if row_label == &#39;tire&#39;:
+        return 9
+    if row_label == &#39;styrofoam&#39;:
+        return 10
+    if row_label == &#39;washing_machine&#39;:
+        return 11
+    if row_label == &#39;box&#39;:
+        return 12
+    if row_label == &#39;bottle&#39;:
+        return 13
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
     </div>
   </div>

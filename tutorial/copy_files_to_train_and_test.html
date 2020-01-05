@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>Tutorial01_download_and_installation</title>
+<title>copy_files_to_train_and_test</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13076,24 +13076,15 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">Date: 2019/12/29</span>
-<span class="sd">OS: Windows 10</span>
-
-<span class="sd">This tutorial is based on Anaconda and Tensorflow-gpu v1.13.1.</span>
-<span class="sd">I will introduce how to setup the Tensorflow Object Detection API.</span>
-
-<span class="sd">I strongly recommend everyone who read this tutorial use Tensorflow-gpu v1.13.1 for object detection API.</span>
-<span class="sd">Since I have faced many problems using Tensorflow-gpu v2.0.0, v1.9, v1.14.</span>
-
-<span class="sd">I guess it&#39;s due to Tensorflow Object Detection team is still working hard on improving this API,</span>
-<span class="sd">so they modified a lot and also the other module like numpy or pandas are progressing,</span>
-<span class="sd">which will lead to difficuty while play around this API</span>
-
-<span class="sd">&#39;&#39;&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Keep in mind that if there are still files in images\train or images\test you are going to paste </span>
+<span class="c1"># delete them manually</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">random</span>
 </pre></div>
 
     </div>
@@ -13101,158 +13092,122 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Download-Anaconda">Download Anaconda<a class="anchor-link" href="#Download-Anaconda">&#182;</a></h1><pre><font size=4>
-For downloading Anaconda:
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## Here are the directory you should decide yourself</span>
+<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">PATH</span> <span class="o">=</span> <span class="n">path</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;object_detection&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">PATH</span> <span class="o">=</span> <span class="n">PATH</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">path</span>
+        <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;object_detection&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">PATH</span> <span class="o">=</span> <span class="n">PATH</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">path</span>
+            <span class="k">break</span>
+    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
 
-    <a href="https://www.anaconda.com/">&#9658; Anaconda Home Page</a>
-<font size=3>
-<b>Note:</b> The GUI version will be easier to install unless you are familiar to command line one
-      Python v3.x are recommended if you are not a Python v2.x user for long
-</font>
-</font></pre>
+
+<span class="n">imgs_path</span> <span class="o">=</span> <span class="n">PATH</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">train_cdc</span><span class="se">\\</span><span class="s2">train_images&quot;</span>
+<span class="n">annotations_path</span> <span class="o">=</span> <span class="n">PATH</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">train_cdc</span><span class="se">\\</span><span class="s2">train_annotations&quot;</span>
+
+<span class="n">path_to_train</span> <span class="o">=</span> <span class="n">PATH</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">train&quot;</span>
+<span class="n">path_to_valid</span> <span class="o">=</span> <span class="n">PATH</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">test&quot;</span> <span class="c1"># validation directory is called test here</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Object Detection path:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">PATH</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Train path: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path_to_train</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test path: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path_to_valid</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Images path: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">imgs_path</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Annotations path: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">annotations_path</span><span class="p">))</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Download-and-install-CUDA-and-cuDNN">Download and install CUDA and cuDNN<a class="anchor-link" href="#Download-and-install-CUDA-and-cuDNN">&#182;</a></h1><pre><font size=4>
-<font color="gray"><i>If you want to use CPU ver of Tensorflow, you may skill this part</i></font>
-<font color="gray"><i>However GPU ver is recommended due to object detection takes lots of time</i></font>
 
-Check if your GPU support CUDA <a href="https://developer.nvidia.com/cuda-gpus">here</a>
-For downloading CUDA and cuDNN, which are for Tensorflow GPU ver:
-
-    <a href = "https://developer.nvidia.com/cuda-toolkit-archive">&#9658; CUDA Legacy Releases</a>
-    <a href = "https://developer.nvidia.com/cudnn">&#9658; cuDNN Home Page</a>
-<font size=3>
-<b>Note:</b> Tensorflow-gpu v1.13.1 needs CUDA v10.0 and following cuDNN v7.6.5
-      For other CUDA ver., check <a href="https://www.tensorflow.org/install/source_windows">here</a>
-      You have to sign up and answer some simple questions for downloading cuDNN
-</font>
-If you successfully install CUDA, then open the cuDNN zip file, extract the files and paste each to them into the directories along with the directories inside zip file.
+<div class="output_wrapper">
+<div class="output">
 
 
-Now check if the CUDA installation setup the enviroment variables for you
-<font color="gray"><i>
-    Right click <b>Computer(本機)</b> on desktop
-      -> <b>Properties(內容)</b>
-      -> <b>Advanced system setting(進階系統設定)</b>
-      -> <b>Advanced(進階)</b>
-      -> <b>environment variable(環境變數)</b>
-</i></font>
-Under system variable, check if 
-<font color="gray"><i>
-<b>    variable        value</b>
-    ---------       ------
-    CUDA_PATH       C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0
-    CUDA_BIN_PATH   C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\bin
-</i></font>
-exist, if not add them manually.
-</font></pre>
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Object Detection path:C:\Users\user\Tensorflow\models\research\object_detection
+-----
+Train path: C:\Users\user\Tensorflow\models\research\object_detection\images\train
+Test path: C:\Users\user\Tensorflow\models\research\object_detection\images\test
+-----
+Images path: C:\Users\user\Tensorflow\models\research\object_detection\images\train_cdc\train_images
+Annotations path: C:\Users\user\Tensorflow\models\research\object_detection\images\train_cdc\train_annotations
+</pre>
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Set-up-virtual-enviroment">Set up virtual enviroment<a class="anchor-link" href="#Set-up-virtual-enviroment">&#182;</a></h1><pre><font size=4>
-Open Anaconda Prompt and create a new virtual enviroment by input
-<font size=3>
-    <span style='background:#E8E8E8'>conda create -n <b>&#60;name&#62;</b> python=3.6 pip -y</span>
-    <span style='background:#E8E8E8'>conda activate <b>&#60;name&#62;</b></span>
-    <span style='background:#E8E8E8'>pip install --ignore-installed --upgrade tensorflow-gpu==1.13.1</span>
-</font>
-<font size=3><b>Note:</b> <b>&#60;name&#62;</b> is the virtual enviroment name which you can decide yourself</font>
-
-
-Install neccessary modules
-<font size=3>
-    <span style='background:#E8E8E8'>pip install cython</span>
-    <span style='background:#E8E8E8'>pip install contextlib2</span>
-    <span style='background:#E8E8E8'>pip install pillow</span>
-    <span style='background:#E8E8E8'>pip install lxml</span>
-    <span style='background:#E8E8E8'>pip install matplotlib</span>
-    <span style='background:#E8E8E8'>pip install opencv-python</span>
-    <span style='background:#E8E8E8'>pip install jupyter</span>
-    <span style='background:#E8E8E8'>pip install pandas</span>
-</font>
-</font></pre><pre>
-<b>Note:</b> List the version in case modules in other versions fail
-</pre><table>
-<thead><tr>
-<th style="text-align:left"><font size=4>Module</th>
-<th style="text-align:left"><font size=4>Version</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><font size=4>cython</font></td>
-<td style="text-align:left"><font size=4><i>0.29.14</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>contextlib2</font></td>
-<td style="text-align:left"><font size=4><i>0.6.0.post1</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>pillow</font></td>
-<td style="text-align:left"><font size=4><i>6.2.1</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>lxml</font></td>
-<td style="text-align:left"><font size=4><i>4.4.2</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>matplotlib</font></td>
-<td style="text-align:left"><font size=4><i>3.1.2</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>opencv-python</font></td>
-<td style="text-align:left"><font size=4><i>4.1.2.30</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>jupyter</font></td>
-<td style="text-align:left"><font size=4><i>1.0.0</i></font></td>
-</tr>
-<tr>
-<td style="text-align:left"><font size=4>pandas</font></td>
-<td style="text-align:left"><font size=4><i>0.25.3</i></font></td>
-</tr>
-</tbody>
-</table>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Clone-the-object-detection-API-repository-and-set-it-up">Clone the object detection API repository and set it up<a class="anchor-link" href="#Clone-the-object-detection-API-repository-and-set-it-up">&#182;</a></h1><pre><font size=4>
-Create a folder for object detection API --  <b><i>..\..\Tensorflow</i></b>
-For example:  <font color="gray"><i>C:\Users\user\Tensorflow</i></font>
-Head to the directory and clone the repository from the offical github page by git or download the zip
 
-    <a href="https://github.com/tensorflow/models.git">&#9658; models</a>
-<font size=3>
-<b>Note:</b> If you download the zip file, it will be named <b>\models-master</b>
-      To avoid problems that may happen in the future, change the name to <b>\models</b>
-</font>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Only works when your xml and image files are put in different directories</span>
+<span class="k">def</span> <span class="nf">split_train_valid_into_diff_folders</span><span class="p">(</span><span class="n">valid_ratio</span> <span class="o">=</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="s2">&quot;Oh My God&quot;</span><span class="p">):</span>
+    <span class="n">imgs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">imgs_path</span><span class="p">)</span>
+    <span class="n">annotations</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">annotations_path</span><span class="p">)</span>
 
-Download the patch from <a href="https://github.com/bboyleonp666/ObjectDetection">my github</a>, which is named after <b>patch.rar</b>
-Copy all the files inside and paste them into
+    <span class="n">total_imgs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">imgs</span><span class="p">)</span>
+    <span class="n">valid_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">total_imgs</span> <span class="o">*</span> <span class="n">valid_ratio</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;numbers of images in total: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">total_imgs</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;numbers of images for validation: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">valid_num</span><span class="p">))</span>
 
-    <b><i>..\..\Tensorflow\models\research\object_detection</i></b>
-<font size=3>
-<b>Note:</b> The files inside patch.rar contains some important .py files that we are going to use
-      I have put the source of this patch in <b>source.txt</b>
-      You can also go to the <a href="https://github.com/EdjeElectronics/TensorFlow-Object-Detection-API-Tutorial-Train-Multiple-Objects-Windows-10">source page</a> but you have to delete some files according to that tutorial
-</font>
-</font></pre>
+    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">idx_for_valid</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">total_imgs</span><span class="p">),</span> <span class="n">valid_num</span><span class="p">)</span>
+
+    <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">img</span><span class="p">,</span> <span class="n">annotation</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">imgs</span><span class="p">,</span> <span class="n">annotations</span><span class="p">):</span>
+        <span class="n">img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imgs_path</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>                                           <span class="c1"># path for image</span>
+        <span class="n">annotation_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">annotations_path</span><span class="p">,</span> <span class="n">annotation</span><span class="p">)</span>                      <span class="c1"># path for annotation</span>
+
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">idx_for_valid</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path_to_valid</span><span class="p">,</span> <span class="n">img</span><span class="p">))</span>                   <span class="c1"># copy images to validation</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">annotation_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path_to_valid</span><span class="p">,</span> <span class="n">annotation</span><span class="p">))</span>     <span class="c1"># copy annotations to validation</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path_to_train</span><span class="p">,</span> <span class="n">img</span><span class="p">))</span>                   <span class="c1"># copy images to train</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">annotation_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path_to_train</span><span class="p">,</span> <span class="n">annotation</span><span class="p">))</span>     <span class="c1"># copy annotations to train</span>
+        <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">split_train_valid_into_diff_folders</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
     </div>
   </div>

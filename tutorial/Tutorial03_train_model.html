@@ -13074,12 +13074,38 @@ div#notebook {
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">INFORMATION</span>
+
+<span class="sd">Date: 2019/12/29</span>
+<span class="sd">OS: Windows 10</span>
+
+<span class="sd">Tensorflow-gpu: v1.13.1</span>
+<span class="sd">cython: 0.29.14</span>
+<span class="sd">context: 0.6.0.post1</span>
+<span class="sd">pillow: 6.2.1</span>
+<span class="sd">lxml: 4.4.2</span>
+<span class="sd">matplotlib: 3.1.2</span>
+<span class="sd">opencv-python: 4.1.2.30</span>
+<span class="sd">jupyter: 1.0.0</span>
+<span class="sd">&#39;&#39;&#39;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Train-your-model">Train your model<a class="anchor-link" href="#Train-your-model">&#182;</a></h1><pre><font size=4>
 After setting lots of annoying things, we finally can train the model
-
 Head to <b>&#60;tensorflow&#62;\models\research\object_detecion</b> and type
 <font size=3>
     <span style='background:#E8E8E8'>python train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/faster_rcnn_inception_v2_coco.config
@@ -13091,11 +13117,8 @@ When you see something like the picture below, Congratulations! You made it!!
 </font></pre>
 <img src="train_model.png" alt="Train model successfully" style="width: 800px;">
 <pre><font size=4>
-
 Sometimes you might think the training takes too long and you want to early stop it
-
-Since this API will save the model for you every 5 minutes, you may stop it anytime you want
-
+Since this API saves the model for you every 5 minutes, you can stop it any time you want
 Just by <font size=3><span style='background:#E8E8E8'>Ctrl</span></font> + <font size=3><span style='background:#E8E8E8'>C</span></font>
 </font></pre>
 </div>
@@ -13106,7 +13129,6 @@ Just by <font size=3><span style='background:#E8E8E8'>Ctrl</span></font> + <font
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Monitor-with-Tensorboard">Monitor with Tensorboard<a class="anchor-link" href="#Monitor-with-Tensorboard">&#182;</a></h1><pre><font size=4>
 You can monitor the training loss by Tensorboard and decide if you want to stop training
-
 The approach to open it is simple
 <font color="gray"><i>
     Open a new <b>Prompt</b>
@@ -13119,6 +13141,28 @@ And you will find a link show in <b>Prompt</b>
 <img src="tensorboard.png" alt="Tensorboard" style="width: 800px;">
 <pre><font size=4>
 Open a web browser and paste the link then you can enjoy using Tensorboard
+</font></pre>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Export-frozen-inference-graph">Export frozen inference graph<a class="anchor-link" href="#Export-frozen-inference-graph">&#182;</a></h1><pre><font size=4>
+Before head to the predition, you still got one more step after training process
+
+<i><b>First</b></i>
+ - Check the latest checkpoint of your training in <b>&#60;tensorflow&#62;\models\research\object_detecion\training</b>
+ - The files contain <b>model.ckpt-XXXX</b> is the checkpoints of your training
+ - The largest XXXX is the lateset checkpoint file
+
+<i><b>Second</b></i>
+ - Back to <b>&#60;tensorflow&#62;\models\research\object_detecion</b> and type
+<font size=3>
+     <span style='background:#E8E8E8'>python export_inference_graph.py --input_type image_tensor --pipeline_config_path training/<b>&#60;Your .config file&#62;</b> --trained_checkpoint_prefix training/<b>model.ckpt-XXXX</b> --output_directory inference_graph</span>
+</font>
+ - This will export the frozen_inference_graph.pb file into <b>\object_detection\inference_graph</b> folder
+ - Which is the file containing information of our training
 </font></pre>
 </div>
 </div>

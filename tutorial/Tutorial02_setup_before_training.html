@@ -13124,7 +13124,6 @@ For setting up the path so that the OS can this API, we set a PYTHONPATH for it
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Setup-object-detection-API">Setup object detection API<a class="anchor-link" href="#Setup-object-detection-API">&#182;</a></h1><pre><font size=4>
 Head to <i><b>&#60;tensorflow&#62;\models\research</b></i> in virtual environment you've created by <span style='background:#E8E8E8'>cd</span> command
-
 Paste all the command below and run it
 <table align="left"><tr><td><font size = 3>
 protoc --python_out=. .\object_detection\protos\anchor_generator.proto .\object_detection\protos\argmax_matcher.proto .\object_detection\protos\bipartite_matcher.proto .\object_detection\protos\box_coder.proto .\object_detection\protos\box_predictor.proto .\object_detection\protos\eval.proto .\object_detection\protos\faster_rcnn.proto .\object_detection\protos\faster_rcnn_box_coder.proto .\object_detection\protos\grid_anchor_generator.proto .\object_detection\protos\hyperparams.proto .\object_detection\protos\image_resizer.proto .\object_detection\protos\input_reader.proto .\object_detection\protos\losses.proto .\object_detection\protos\matcher.proto .\object_detection\protos\mean_stddev_box_coder.proto .\object_detection\protos\model.proto .\object_detection\protos\optimizer.proto .\object_detection\protos\pipeline.proto .\object_detection\protos\post_processing.proto .\object_detection\protos\preprocessor.proto .\object_detection\protos\region_similarity_calculator.proto .\object_detection\protos\square_box_coder.proto .\object_detection\protos\ssd.proto .\object_detection\protos\ssd_anchor_generator.proto .\object_detection\protos\string_int_label_map.proto .\object_detection\protos\train.proto .\object_detection\protos\keypoint_box_coder.proto .\object_detection\protos\multiscale_anchor_generator.proto .\object_detection\protos\graph_rewriter.proto .\object_detection\protos\calibration.proto .\object_detection\protos\flexible_grid_anchor_generator.proto
@@ -13166,7 +13165,7 @@ and put it into
 <font size=3>
 <b>Note:</b> Here we are going to use <b>faster_rcnn_inception_v2_coco_2018_01_28</b> model
       so we download the model zipped in .tar.gz file and extract it to <i><b>\object_detection</b></i>
-      then copy <b>faster_rcnn_inception_v2_coco.config</b> and paste into <i><b>\object_detection\traing</b></i>
+      then copy <b>faster_rcnn_inception_v2_coco.config</b> and paste into <i><b>\object_detection\training</b></i>
 </font>
 </font></pre>
 </div>
@@ -13177,18 +13176,16 @@ and put it into
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Prepare-for-the-images">Prepare for the images<a class="anchor-link" href="#Prepare-for-the-images">&#182;</a></h1><pre><font size=4>
 In the API, you need to separate training and validation set by yourself and you must have them
-
-So I wrote copy_files_to_train_and_test.ipynb and put it in my <a href="https://github.com/bboyleonp666/ObjectDetection/tree/master/tutorial">tutorial</a>
-
+So I wrote copy_files_to_train_and_test.ipynb and put it in <a href="https://github.com/bboyleonp666/ObjectDetection/tree/master/tutorial">my tutorial</a>
 You can modify it by change the source directory of you images and annotations
-
 But the target folder must be under the directories below separately
 
     <i><b>&#60;tensorflow&#62;\models\research\object_detection\images\train</b></i>
     <i><b>&#60;tensorflow&#62;\models\research\object_detection\images\test</b></i>
 <font size=3>
-<b>Note:</b> I extract train_cdc.zip to <i>..\models\research\object_detection\images</i> and put that .ipynb file in it
+<b>Note:</b> I extract train_cdc.zip to <i>..\models\research\object_detection\images</i> and put <b>copy_files_to_train_and_test.ipynb</b> in it
       By doing so, you don't have to change anything and just run everything will be done automatically
+      <b>copy_files_to_train_and_test.ipynb</b> is put in <a href="https://github.com/bboyleonp666/ObjectDetection/tree/master/tutorial">my tutorial</a>
 </font>
 </font></pre>
 </div>
@@ -13217,20 +13214,16 @@ which will transfer the xml files in \images to csv files for training and valid
 <font size=6 color="orange"><b>NOTE:</b></font>
 <pre><font size=4 color="gray">
 For the parts before Generate TFrecord, you can skip them by using the code that I wrote 
-
 Which is put <a href="https://github.com/bboyleonp666/ObjectDetection/tree/master/tutorial">here</a> named <b>create_pbtxt_and_modify_generate_tfrecord.ipynb</b>
-
 You can just put it in
 
     <i><b>&#60;tensorflow&#62;\models\research\object_detection\images</b></i>
 
 And run with any change
-
-Or somewhere but with the input path changing
+Or somewhere but with the input path changed by yourself
 </font></pre><hr>
 <h2 id="create-label-map">create label map<a class="anchor-link" href="#create-label-map">&#182;</a></h2><pre><font size=4>
 Label map format is shown below
-
 And should be saved under <i><b>&#60;tensorflow&#62;\models\research\object_detection\training</b></i> folder
 <font size=3>
 item {
@@ -13252,7 +13245,6 @@ item {
 ## csv to record
 <pre><font size=4>
 We have to modify the <i><b>&#60;tensorflow&#62;\models\research\object_detection\generate_tfrecord.py</b></i>
-
 with the labels named for objects like below
 <font size=3>
 # Assume that we got dog and cat as our labels
@@ -13272,7 +13264,7 @@ def class_text_to_int(row_label):
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Generate-TFrecord">Generate TFrecord<a class="anchor-link" href="#Generate-TFrecord">&#182;</a></h1><pre><font size=4>
-<span style='background:#E8E8E8'>cd</span> into <i><b>&#60;tensorflow&#62;\models\research</b></i> and run
+<span style='background:#E8E8E8'>cd</span> into <i><b>&#60;tensorflow&#62;\models\research\object_detection</b></i> and run
 <font size=3>
     <span style='background:#E8E8E8'>python generate_tfrecord.py --csv_input=images\train_labels.csv --image_dir=images\train --output_path=train.record</span>
     <span style='background:#E8E8E8'>python generate_tfrecord.py --csv_input=images\test_labels.csv --image_dir=images\test --output_path=test.record</span>
@@ -13286,7 +13278,6 @@ def class_text_to_int(row_label):
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Adjust-some-detail-in-config">Adjust some detail in config<a class="anchor-link" href="#Adjust-some-detail-in-config">&#182;</a></h1><pre><font size=4>
 The .config file has some lines that we have to adjust ourselves
-
 which is shown below and marked in colors
 <font color="red" size=3>
 <b>NOTE:</b> The path below should all be "/" instead of "\"
